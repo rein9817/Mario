@@ -133,10 +133,8 @@ export default class Player extends cc.Component {
             this.node.runAction(seq);
         } else {
             let seq = cc.sequence(
-                // cc.moveBy(0.5, 0, 500).easing(cc.easeInOut(1)),
                 cc.callFunc(() => {
                     this.playerJump();
-                    //cc.moveBy(1, 0, 100).easing(cc.easeInOut(1));
                     cc.systemEvent.off(
                         cc.SystemEvent.EventType.KEY_DOWN,
                         this.onKeyDown,
@@ -185,7 +183,7 @@ export default class Player extends cc.Component {
             if (otherCollider.node.name == "lower_bound") {
                 this.playerDie();
                 //this.node.active = false;
-            } else if (otherCollider.tag == 2 && contact.getWorldManifold().normal.y < 0) {
+            } else if (otherCollider.tag === 2 && contact.getWorldManifold().normal.y < 0) {
                 this.is_onGround = true;
             } else if (otherCollider.node.name == "flag") {
                 cc.director.loadScene("GameOver");
