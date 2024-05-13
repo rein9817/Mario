@@ -13,8 +13,7 @@ export default class NewClass extends cc.Component {
     @property(cc.AudioClip)
     bgm: cc.AudioClip = null;
     
-    @property(cc.Node)
-    player: cc.Node = null;
+
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -22,6 +21,7 @@ export default class NewClass extends cc.Component {
         cc.audioEngine.playMusic(this.bgm, true);
         let physicManager=cc.director.getPhysicsManager();
         physicManager.enabled=true;
+        console.log("onLoad");
     }
 
     start () {

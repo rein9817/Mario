@@ -30,7 +30,6 @@ export default class Block extends cc.Component {
         }
     }
 
-    // Method to transform the question block into a normal block
     transformToNormalBlock() {
         let sprite = this.getComponent(cc.Sprite);
         if (sprite && this.normalBlockSprite) {
