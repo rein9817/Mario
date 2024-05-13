@@ -1,118 +1,202 @@
+import Global from "./global";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class Player extends cc.Component {
 
+    @property()
+    jumpspeed: number = 300;
+    private _animation: cc.Animation = null;
+    private _animState: cc.AnimationState = null;
+    private _idleAnimState: cc.AnimationState = null;
+    private _moveAnimState: cc.AnimationState = null;
+    private _jumpAnimState: cc.AnimationState = null;
+    private _dieAnimState: cc.AnimationState = null;
+    private is_onGround: boolean = false;
+    private is_die: boolean = false;
+    // private roburn_x: number = -465;
 
-    @property
-    speed: number = 100; // Speed at which the player moves, units per second
-    
-    @property
-    jumpHeight: number = 300; // Jump height of the player, units  
+    private moveDir = 0;
 
-    private moveDirection: number = 0;
-    private isOnGround: boolean = false;
-    private isJumping: boolean = false;
-    private isSpaceDown: boolean = false;
-    private anim: cc.Animation = null;
-    private moveAnimState: cc.AnimationState = null;
-    private jumpAnimState: cc.AnimationState = null;
-    private dieAnimState: cc.AnimationState = null; 
-    private idleAnimState: cc.AnimationState = null;    
-    private AnimState: cc.AnimationState = null;
+    @property()
+    playerSpeed: number = 100;
 
     onLoad() {
+        this._animation = this.node.getComponent(cc.Animation);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
-        this.AnimState=this.getComponent(cc.Animation).play("player_idle");
-        this.moveAnimState = this.getComponent(cc.Animation).getAnimationState("player_move");
-        this.jumpAnimState = this.getComponent(cc.Animation).getAnimationState("player_jump");
-        this.dieAnimState = this.getComponent(cc.Animation).getAnimationState("player_die");
-        this.idleAnimState = this.getComponent(cc.Animation).getAnimationState("player_idle");
     }
 
-    
+    start() {
+        // this.idleFrame = this.getComponent(cc.Sprite).spriteFrame;
+        this._idleAnimState = this._animation.getAnimationState("player_idle");
+        this._moveAnimState = this._animation.getAnimationState("player_move");
+        this._jumpAnimState = this._animation.getAnimationState("player_jump");
+        this._dieAnimState = this._animation.getAnimationState("player_die");
+        this._animState = this._animation.play("player_idle");
+    }
 
-    update(dt) {
-        // Check if the player is trying to move and ensure there is no wall in the move direction
-        if (this.moveDirection !== 0) {
-            this.node.x += this.moveDirection * this.speed * dt;
-    
-            if (!this.anim.getAnimationState("player_move").isPlaying) {
-                this.anim.play("player_move");
+    update(dt) 
+    {
+        // this.node.x =(this.node.x <= this.roburn_x ? this.roburn_x : this.node.x);
+
+        this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
+            this.moveDir * this.playerSpeed,
+            this.getComponent(cc.RigidBody).linearVelocity.y
+        );
+
+        if (this.moveDir != 0) {
+            this.node.setScale(
+                new cc.Vec2(
+                    // X
+                    this.moveDir,
+                    // Y
+                    1
+                )
+            );
+        }
+            if (!this.is_die) {
+                if (
+                    !this.node
+                        .getComponent(cc.RigidBody)
+                        .linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01) &&
+                    this.is_onGround
+                ) {
+                    if (this._animState != this._moveAnimState) {
+                        this._animState = this._animation.play("player_move");
+                    }
+                } else if (
+                    !this.node
+                        .getComponent(cc.RigidBody)
+                        .linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01)
+                ) {
+                    if (this._animState != this._jumpAnimState) {
+                        this._animState = this._animation.play("player_jump");
+                    }
+                } else {
+                    if (this._animState != this._idleAnimState) {
+                        this._animState = this._animation.play("player_idle");
+                    }
+                }
+            } else {
+                if (this._animState != this._dieAnimState) {
+                    this._animState = this._animation.play("player_die");
+                }
             }
+
+    }
+
+
+    playerMove(moveDir: number) {
+        this.moveDir = moveDir;
+    }
+
+    playerJump() {
+        
+        if (this.is_onGround) {
+            this.is_onGround = false;
+            //todo
+            // cc.find("GameMgr").getComponent("gameMgr").play_player_jump_sound();
+            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
+                this.getComponent(cc.RigidBody).linearVelocity.x,
+                this.jumpspeed
+            );
+        }
+    }
+
+    playerDie() {
+        Global.life--;
+        this.is_die = true;
+        //todo play die sound
+        if (Global.life < 0) {
+            let seq = cc.sequence(
+                // cc.moveBy(0.5, 0, 500).easing(cc.easeInOut(1)),
+                cc.callFunc(() => {
+                    this.playerJump();
+                    //cc.moveBy(1, 0, 100).easing(cc.easeInOut(1));
+                    cc.systemEvent.off(
+                        cc.SystemEvent.EventType.KEY_DOWN,
+                        this.onKeyDown,
+                        this
+                    );
+                    cc.systemEvent.off(
+                        cc.SystemEvent.EventType.KEY_UP,
+                        this.onKeyUp,
+                        this
+                    );
+                }),
+                cc.delayTime(0.5),
+                cc.callFunc(() => {
+                    cc.director.loadScene("GameOver");
+                })
+            );
+            this.node.runAction(seq);
         } else {
-            // Play idle animation if not moving
-            if (!this.anim.getAnimationState("player_idle").isPlaying) {
-                this.anim.play("player_idle");
-            }
+            let seq = cc.sequence(
+                // cc.moveBy(0.5, 0, 500).easing(cc.easeInOut(1)),
+                cc.callFunc(() => {
+                    this.playerJump();
+                    //cc.moveBy(1, 0, 100).easing(cc.easeInOut(1));
+                    cc.systemEvent.off(
+                        cc.SystemEvent.EventType.KEY_DOWN,
+                        this.onKeyDown,
+                        this
+                    );
+                    cc.systemEvent.off(
+                        cc.SystemEvent.EventType.KEY_UP,
+                        this.onKeyUp,
+                        this
+                    );
+                }),
+                cc.delayTime(0.5),
+                cc.callFunc(() => {
+                    cc.director.loadScene("game_start");
+                })
+            );
+            this.node.runAction(seq);
         }
-    }
+    }   
     
-    canMoveTo(xPosition) {
-        // Here, you'll need to implement a way to check if the position `xPosition` is clear of walls
-        // For now, let's assume you have some logic to check collisions or wall proximity:
-        // Return false if there is a wall, true if movement is possible
-        return true;  // Placeholder: Replace this with actual collision check logic
+    onKeyDown(event: cc.Event.EventKeyboard) {
+        switch (event.keyCode) {
+            case cc.macro.KEY.a: // Left
+                this.playerMove(-1);
+                break;
+            case cc.macro.KEY.d: // Right
+                this.playerMove(1);
+                break;
+            case cc.macro.KEY.space: // Jump
+                this.playerJump();
+                break;
+        }
     }
+
     
-
-    jump() {
-        if (this.isOnGround && !this.isJumping && this.isSpaceDown) {
-            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(0, this.jumpHeight);
-            this.isJumping = true;
-            this.isOnGround = false; // Reset ground state until collision confirms it's back on ground
-        }
-    }
-
-    onKeyDown(event) {
-        switch (event.keyCode) {
-            case cc.macro.KEY.space:
-                this.isSpaceDown = true;
-                this.jump();
-                break;
-            case cc.macro.KEY.a:
-                this.moveDirection = -1;
-                break;
-            case cc.macro.KEY.d:
-                this.moveDirection = 1;
-                break;
-        }
-    }
-
-    onKeyUp(event) {
-        switch (event.keyCode) {
-            case cc.macro.KEY.a:
-            case cc.macro.KEY.d:
-                this.moveDirection = 0;
-                break;
-            case cc.macro.KEY.space:
-                this.isJumping = false;
-                this.isSpaceDown = false;
-                break;
+    onKeyUp(event: cc.Event.EventKeyboard) {
+        if (event.keyCode === cc.macro.KEY.a || event.keyCode === cc.macro.KEY.d) {
+            this.playerMove(0);
         }
     }
 
     onBeginContact(contact, selfCollider, otherCollider) {
-        if(otherCollider.node.name === "left_bound" || otherCollider.node.name === "right_bound"){ 
-            this.moveDirection = 0;
-        }
-        else if (otherCollider.tag === 2) {
-            this.isOnGround = true;
-        }
-        else if(otherCollider.tag === 3) {
-            cc.director.loadScene("gameover"); 
-        }
-    }
-
-    onEndContact(contact, selfCollider, otherCollider) {
-        if (otherCollider.tag === 2) {
-            this.isOnGround = false;
+        if (this.is_die) {
+            contact.disabled = true;
+        } else {
+            if (otherCollider.node.name == "lower_bound") {
+                this.playerDie();
+                //this.node.active = false;
+            } else if (otherCollider.tag == 2 && contact.getWorldManifold().normal.y < 0) {
+                this.is_onGround = true;
+            } else if (otherCollider.node.name == "flag") {
+                cc.director.loadScene("GameOver");
+            }
         }
     }
 
-    onDestroy() {
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+    onPreSolve(contact, selfCollider, otherCollider) {
+        if (this.is_die) {
+            contact.disabled = true;
+        }
     }
+    // update (dt) {}
 }

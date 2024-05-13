@@ -29,9 +29,6 @@ export default class CameraFollow extends cc.Component {
             newY = cc.misc.clampf(newY, this.minY, this.maxY);
     
             this.node.position = new cc.Vec2(newX, newY);
-            
-            // 調試輸出
-            console.log(`Camera final position: ${this.node.position}`);
         }
     }
     
