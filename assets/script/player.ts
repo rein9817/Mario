@@ -6,6 +6,10 @@ export default class Player extends cc.Component {
 
     @property()
     jumpspeed: number = 300;
+
+    @property(cc.AudioClip)
+    game_over_sound: cc.AudioClip = null;
+    
     private _animation: cc.Animation = null;
     private _animState: cc.AnimationState = null;
     private _idleAnimState: cc.AnimationState = null;
@@ -182,11 +186,12 @@ export default class Player extends cc.Component {
         } else {
             if (otherCollider.node.name == "lower_bound") {
                 this.playerDie();
-                //this.node.active = false;
+                cc.director.loadScene("GameOver");
+                cc.audioEngine.playEffect(this.game_over_sound, false);
             } else if (otherCollider.tag === 2 && contact.getWorldManifold().normal.y < 0) {
                 this.is_onGround = true;
             } else if (otherCollider.node.name == "flag") {
-                cc.director.loadScene("GameOver");
+                
             }
         }
     }

@@ -1,9 +1,3 @@
-// Learn TypeScript:
-//  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 const {ccclass, property} = cc._decorator;
 
@@ -21,7 +15,7 @@ export default class NewClass extends cc.Component {
         cc.audioEngine.playMusic(this.bgm, true);
         let physicManager=cc.director.getPhysicsManager();
         physicManager.enabled=true;
-        console.log("onLoad");
+        // console.log("onLoad");
     }
 
     start () {
@@ -31,5 +25,10 @@ export default class NewClass extends cc.Component {
     update (dt) 
     {
 
+    }
+
+    gameComplete()
+    {
+        
     }
 }
