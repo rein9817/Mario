@@ -54,27 +54,29 @@ export default class level_select extends cc.Component {
     }
 
     LoadStage1() {
+        Global.stage ="Level1";
         cc.director.loadScene("GameStart");
     }
 
     LoadStage2() {
+        Global.stage ="Level1";
         cc.director.loadScene("GameStart");
     }
 
-    // Loadleader_board() {
-    //     var ref = firebase.database().ref("user/").orderByChild("max_score");
-    //     ref.once("value").then((val) => {
-    //         var data = [];
-    //         val.forEach((element) => {
-    //             console.log(element.val().username);
-    //             console.log(element.val().max_score);
-    //             data.push([element.val().username, element.val().max_score]);
-    //         });
-    //         // console.log(data);
-    //         data.reverse();
-    //         Global.leader = data;
-    //         cc.director.loadScene("leader_board");
-    //     });
-    // }
+    Loadleader_board() {
+        var ref = firebase.database().ref("user/").orderByChild("max_score");
+        ref.once("value").then((val) => {
+            var data = [];
+            val.forEach((element) => {
+                console.log(element.val().username);
+                console.log(element.val().max_score);
+                data.push([element.val().username, element.val().max_score]);
+            });
+            // console.log(data);
+            data.reverse();
+            Global.leader = data;
+            cc.director.loadScene("leader_board");
+        });
+    }
 
 }

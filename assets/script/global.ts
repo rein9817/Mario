@@ -1,6 +1,5 @@
 // Global.ts
 
-
 const Global = {
     complete1: false,
     score: 0,
@@ -8,7 +7,9 @@ const Global = {
     life: 5,
     max_score: 0,
     offline: false,
-    username: ""
+    username: "",
+    stage: "Level1",
+    leader: []
 };
 
 export default Global;
