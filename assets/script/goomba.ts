@@ -1,98 +1,102 @@
-import Global from "./global";
+// Learn TypeScript:
+//  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
+// Learn Attribute:
+//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
+// Learn life-cycle callbacks:
+//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Goomba extends cc.Component {
-    @property(cc.Integer)
+    @property(cc.Number)
     walkDir: number = 1;
 
-    @property(cc.Integer)
+    @property(cc.Number)
     movingDir: number = 1;
 
-    @property(cc.Float)
-    movingSpeed: number = 100;
+    @property(cc.Number)
+    movingSpeed: number = 5000;
 
     @property(cc.Node)
     goombaScore: cc.Node = null;
 
-    private animation: cc.Animation = null;
-
-    private isDie: boolean = false;
-
-    private onGround: boolean = false;
-
+    private _animation: cc.Animation = null;
+    private _isDie: boolean = false;
+    private _onGround: boolean = false;
     public isFlew: boolean = false;
 
     onLoad() {
-        this.animation = this.getComponent(cc.Animation);
+        this._animation = this.getComponent(cc.Animation);
     }
 
     start() {
-        this.schedule(this.move, 0.5);
+        this.schedule(this.moving, 0.5);
         this.goombaScore.setScale(cc.v2(0, 0));
     }
 
-    move = () => {
+    moving() {
         this.walkDir = -this.walkDir;
-        this.node.scaleX = this.walkDir * Math.abs(this.node.scaleX);
+        this.node.setScale(cc.v2(this.walkDir * 2, 2));
     }
 
     update(dt: number) {
-        if (this.onGround && !this.isDie) {
+        if (this._onGround) {
             const rigidBody = this.getComponent(cc.RigidBody);
             rigidBody.linearVelocity = cc.v2(
-                this.walkDir * this.movingSpeed*dt,
+                this.movingDir * this.movingSpeed * dt,
                 rigidBody.linearVelocity.y
             );
         }
 
-        if (this.isDie) {
+        if (this._isDie) {
             this.scheduleOnce(() => {
                 this.node.destroy();
             }, 0.3);
         }
     }
 
-    onBeginContact(contact: any, selfCollider: any, otherCollider: any) {
+    onBeginContact(contact, selfCollider, otherCollider) {
         if (otherCollider.node.name === "player") {
-            if (this.isDie) {
-                contact.disabled = true;
-                return;
-            }
-
-            const playerComponent = otherCollider.node.getComponent("player");
-
-            if (contact.getWorldManifold().normal.y > 0 && !this.isDie && !playerComponent.isDie) {
-                this.animation.play("goomba_kill");
-                this.unschedule(this.move);
-                playerComponent.isOnGround = true;
-                playerComponent.playerJump();
-                contact.disabled = true;
-
-                this.isDie = true;
-                this.goombaScore.setScale(cc.v2(this.walkDir, 1));
-
-                this.scheduleOnce(() => {
-                    this.goombaScore.destroy();
-                }, 0.5);
-
-                Global.score += 100;
-            } else if (!this.isDie && this.node.active) {
-                playerComponent.playerDie();
-            }
-        } else if (["pile", "bound"].includes(otherCollider.node.getParent().name)) {
+            this.handlePlayerContact(contact, otherCollider);
+        } else if (otherCollider.node.getParent().name === "pile" || otherCollider.node.getParent().name === "bound") {
             this.movingDir = -this.movingDir;
-            this.walkDir = -this.walkDir;
-            this.node.scaleX = this.walkDir * Math.abs(this.node.scaleX); // 反转 Goomba 的方向
         } else if (otherCollider.tag === 2) {
-            this.onGround = true;
+            this._onGround = true;
         }
     }
 
-    onPreSolve(contact: any, selfCollider: any, otherCollider: any) {
-        if (otherCollider.tag === 2 || otherCollider.node.getParent().name === "pile") {
-            this.onGround = true;
+    onPreSolve(contact, selfCollider, otherCollider) {
+        if (otherCollider.tag === 2 && otherCollider.node.getParent().name !== "high_pile") {
+            this._onGround = true;
         }
+    }
+
+    private handlePlayerContact(contact, otherCollider) {
+        const player = otherCollider.node.getComponent("player");
+        if (this._isDie) {
+            contact.disabled = true;
+        } else if (contact.getWorldManifold().normal.y > 0 && !this._isDie && !player.is_die) {
+            this.killGoomba(contact, player);
+        } else if (!this._isDie && this.node.active) {
+            player.playerDie();
+        }
+    }
+
+    private killGoomba(contact, player) {
+        this._animation.play("goomba_kill");
+        this.unschedule(this.moving);
+        player.is_onGround = true;
+        player.playerJump();
+        contact.disabled = true;
+
+        this._isDie = true;
+        this.goombaScore.setScale(cc.v2(1 * this.walkDir, 1));
+
+        this.scheduleOnce(() => {
+            this.goombaScore.destroy();
+        }, 0.5);
+
+        cc.find("GameMgr").getComponent("gameMgr").get_score(100);
     }
 }
