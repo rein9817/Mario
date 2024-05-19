@@ -3577,8 +3577,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        2020.221,
-        43.38,
+        2018.932,
+        38.364,
         0,
         0,
         0,
@@ -4636,7 +4636,7 @@
       "ctor": "Float64Array",
       "array": [
         1146.482,
-        -139.386,
+        -127.369,
         0,
         0,
         0,
@@ -5235,7 +5235,7 @@
       "y": 0
     },
     "_angularVelocity": 0,
-    "_fixedRotation": false,
+    "_fixedRotation": true,
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
@@ -5275,10 +5275,12 @@
       "__id__": 119
     },
     "_enabled": true,
-    "walk_dir": 1,
-    "moving_dir": 1,
-    "moving_speed": 20000,
-    "goomba_score": null,
+    "walkDir": 1,
+    "movingDir": 1,
+    "movingSpeed": 5000,
+    "goombaScore": {
+      "__id__": 120
+    },
     "_id": "06wl6HPWdB25a2jY8i9qZH"
   },
   {
@@ -5807,7 +5809,7 @@
       "y": 0
     },
     "_angularVelocity": 0,
-    "_fixedRotation": false,
+    "_fixedRotation": true,
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
@@ -5847,10 +5849,12 @@
       "__id__": 136
     },
     "_enabled": true,
-    "walk_dir": 1,
-    "moving_dir": 1,
-    "moving_speed": 20000,
-    "goomba_score": null,
+    "walkDir": 1,
+    "movingDir": 1,
+    "movingSpeed": 5000,
+    "goombaScore": {
+      "__id__": 137
+    },
     "_id": "107imXh+NMx7HH56/1A6pd"
   },
   {
@@ -6127,7 +6131,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -41.263,
+        43.25,
         -261.56,
         0,
         0,
@@ -6303,10 +6307,10 @@
       "__id__": 152
     },
     "_enabled": true,
-    "walk_dir": 1,
-    "moving_dir": -1,
-    "moving_speed": 5000,
-    "goomba_score": {
+    "walkDir": -1,
+    "movingDir": -1,
+    "movingSpeed": 5000,
+    "goombaScore": {
       "__id__": 153
     },
     "_id": "20F6Iz21lEbLN6idcCbXBb"
@@ -6347,7 +6351,7 @@
       "y": 0
     },
     "_angularVelocity": 0,
-    "_fixedRotation": false,
+    "_fixedRotation": true,
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
@@ -6988,7 +6992,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        1359.086,
+        1057.337,
         -223.506,
         0,
         0,
@@ -7011,7 +7015,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "f02k8Sk89KT6rkgiNPxtO0"
+    "_id": "74BvJCVKJErZGbARsdCYqf"
   },
   {
     "__type__": "cc.Node",
@@ -7058,7 +7062,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        62.73,
+        0,
         0,
         0,
         0,
@@ -7081,7 +7085,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "29WyjgVIBHQLgYiFVgsXF6"
+    "_id": "48xrYOOdpNwpqLmtMfFqpG"
   },
   {
     "__type__": "cc.TiledLayer",
@@ -7096,7 +7100,7 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
-    "_id": "8btKI0LPJPG7tqZS2IYQxc"
+    "_id": "17px8TqGdEVZKpGUQK6Y8a"
   },
   {
     "__type__": "cc.RigidBody",
@@ -7121,7 +7125,7 @@
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
-    "_id": "0czKq6ELlDuJt+HFyBwntn"
+    "_id": "73AhdhlThA14xzFB4PqvG5"
   },
   {
     "__type__": "cc.PhysicsBoxCollider",
@@ -7147,7 +7151,7 @@
       "width": 32,
       "height": 64
     },
-    "_id": "d5zlWBgE1CeoqiiUh/3Lgh"
+    "_id": "c3yli3qL1Dqp3Sw0yzxban"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -7171,7 +7175,7 @@
     "_tmxFile": {
       "__uuid__": "d8a672fb-4870-4f49-bfcc-f57c1b1030ea"
     },
-    "_id": "afN8MiZ6tIcbsSBoV5vQdX"
+    "_id": "a1iDklfbFL261lz5RlLWDt"
   },
   {
     "__type__": "cc.RigidBody",
@@ -7196,7 +7200,7 @@
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
-    "_id": "08r7BzIHhDCaGMG8/6WWS2"
+    "_id": "a14nL1mqNMaYPp626rnIYc"
   },
   {
     "__type__": "cc.PhysicsBoxCollider",
@@ -7222,7 +7226,7 @@
       "width": 32,
       "height": 64
     },
-    "_id": "3fUksNZy9HdZJk2lSPH6Ko"
+    "_id": "2fHEvBCzhH6r5lqEREM+os"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -7284,7 +7288,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        1057.337,
+        1393.589,
         -223.506,
         0,
         0,
@@ -7307,7 +7311,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "74BvJCVKJErZGbARsdCYqf"
+    "_id": "8cTOO823JAEJmt8gbGUfW+"
   },
   {
     "__type__": "cc.Node",
@@ -7377,7 +7381,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "48xrYOOdpNwpqLmtMfFqpG"
+    "_id": "1fh11rkWpN9Iib82zkciw7"
   },
   {
     "__type__": "cc.TiledLayer",
@@ -7392,7 +7396,7 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
-    "_id": "17px8TqGdEVZKpGUQK6Y8a"
+    "_id": "2bSu60ifJLHYwr31xPh88w"
   },
   {
     "__type__": "cc.RigidBody",
@@ -7417,7 +7421,7 @@
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
-    "_id": "73AhdhlThA14xzFB4PqvG5"
+    "_id": "0ejcWSKJVLG5W7r8k8Ciaj"
   },
   {
     "__type__": "cc.PhysicsBoxCollider",
@@ -7443,7 +7447,7 @@
       "width": 32,
       "height": 64
     },
-    "_id": "c3yli3qL1Dqp3Sw0yzxban"
+    "_id": "e1hVP2+t5EzrzCnXhdtRzl"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -7467,7 +7471,7 @@
     "_tmxFile": {
       "__uuid__": "d8a672fb-4870-4f49-bfcc-f57c1b1030ea"
     },
-    "_id": "a1iDklfbFL261lz5RlLWDt"
+    "_id": "7asgyQR3dK4Y1viqsFl3AM"
   },
   {
     "__type__": "cc.RigidBody",
@@ -7492,7 +7496,7 @@
     "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
-    "_id": "a14nL1mqNMaYPp626rnIYc"
+    "_id": "51ypq6SVJFwa0pl3pEffLk"
   },
   {
     "__type__": "cc.PhysicsBoxCollider",
@@ -7518,7 +7522,7 @@
       "width": 32,
       "height": 64
     },
-    "_id": "2fHEvBCzhH6r5lqEREM+os"
+    "_id": "797TUEbP5OtYRnl278BMBi"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -7941,7 +7945,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        0,
+        -5.157,
         0,
         0,
         0,
