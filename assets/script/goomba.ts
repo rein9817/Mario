@@ -59,7 +59,7 @@ export default class Goomba extends cc.Component {
     onBeginContact(contact, selfCollider, otherCollider) {
         if (otherCollider.node.name === "player") {
             this.handlePlayerContact(contact, otherCollider);
-        } else if (otherCollider.node.getParent().name === "pile" || otherCollider.node.getParent().name === "bound") {
+        } else if (otherCollider.node.name === "pile" || otherCollider.node.getParent().name === "bound") {
             this.movingDir = -this.movingDir;
         } else if (otherCollider.tag === 2) {
             this._onGround = true;
@@ -67,7 +67,7 @@ export default class Goomba extends cc.Component {
     }
 
     onPreSolve(contact, selfCollider, otherCollider) {
-        if (otherCollider.tag === 2 && otherCollider.node.getParent().name !== "high_pile") {
+        if (otherCollider.tag === 2 && otherCollider.node.name !== "pile") {
             this._onGround = true;
         }
     }

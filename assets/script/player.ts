@@ -131,8 +131,8 @@ export default class Player extends cc.Component {
             } else if (otherCollider.tag === 2 && contact.getWorldManifold().normal.y < 0) {
                 this.is_onGround = true;
             } else if (otherCollider.node.name === "flag") {
-                // Handle flag collision
-                cc.find("GameMgr").getComponent(GameMgr).game_complete();
+                console.log("game complete");
+                cc.find("gameMgr").getComponent("gameMgr").game_complete();
             }
         }
     }

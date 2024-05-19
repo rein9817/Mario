@@ -53,9 +53,7 @@ export default class GameMgr extends cc.Component {
     onLoad() {
         this.physicManager = cc.director.getPhysicsManager();
         this.physicManager.enabled = true;
-        // this.physicManager.gravity = cc.v2(0, -200);
         
-        // Check and initialize labels
         console.log("Initializing labels in onLoad");
         if (this.timer_label) {
             this.timer_label.string = this.time.toString();
@@ -153,48 +151,44 @@ export default class GameMgr extends cc.Component {
         );
         cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
         Global.complete1 = true;
-        if (!Global.offline) {
-            let seq = cc.sequence(
-                cc.delayTime(1),
-                cc.callFunc(() => {
-                    this.game_complete_word
-                        .getComponent("game_complete")
-                        .show_word1();
-                }),
-                cc.delayTime(1),
-                cc.callFunc(() => {
-                    this.game_complete_word
-                        .getComponent("game_complete")
-                        .show_word2();
-                }),
-                cc.delayTime(1),
-                cc.callFunc(() => {
-                    this.game_complete_word
-                        .getComponent("game_complete")
-                        .show_score(this.time);
-                    Global.score += this.time * 50;
-                    if (this.score_label) {
-                        this.score_label.string = Global.score.toString();
-                    }
-                }),
-                cc.delayTime(1),
-                cc.callFunc(() => {
-                    let user = firebase.auth().currentUser;
-                    if (user) {
-                        var ref = firebase.database().ref("users/" + user.uid);
-                        ref.update({
-                            coin: Global.coin,
-                            score: Global.score,
-                            max_score: Math.max(Global.score, Global.max_score),
-                            complete1: Global.complete1,
-                            life: Global.life
-                        });
-                    }
-                    cc.director.loadScene("LevelSelect");
-                })
-            );
-            this.node.runAction(seq);
-        } 
+        let seq = cc.sequence(
+            cc.delayTime(1),
+            cc.callFunc(() => {
+                this.game_complete_word.getComponent("game_complete").show_word1();
+            }),
+            cc.delayTime(1),
+            cc.callFunc(() => {
+                this.game_complete_word
+                    .getComponent("game_complete")
+                    .show_word2();
+            }),
+            cc.delayTime(1),
+            cc.callFunc(() => {
+                this.game_complete_word
+                    .getComponent("game_complete")
+                    .show_score(this.time);
+                Global.score += this.time * 50;
+                if (this.score_label) {
+                    this.score_label.string = Global.score.toString();
+                }
+            }),
+            cc.delayTime(1),
+            cc.callFunc(() => {
+                let user = firebase.auth().currentUser;
+                if (user) {
+                    var ref = firebase.database().ref("users/" + user.uid);
+                    ref.update({
+                        coin: Global.coin,
+                        score: Global.score,
+                        max_score: Math.max(Global.score, Global.max_score),
+                        complete1: Global.complete1,
+                        life: Global.life
+                    });
+                }
+                cc.director.loadScene("LevelSelect");
+            })
+        );
+        this.node.runAction(seq);
     }
 
     get_score(score: number) {
