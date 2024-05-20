@@ -39,9 +39,8 @@ export default class Block extends cc.Component {
                 let rigidBody = this.node.getComponent(cc.RigidBody);
                 if (rigidBody && rigidBody.enabled) {
                     coin.runAction(action);
-                    this.playCoinSound(); // Play coin sound effect
-                    Global.coin++; // Increment coin count
-                    console.log(Global.coin);
+                    this.playCoinSound(); 
+                    cc.find("gameMgr").getComponent("gameMgr").get_coin();
                 } else {
                     console.error("RigidBody not found or not enabled on node");
                 }

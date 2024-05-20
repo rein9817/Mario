@@ -29,6 +29,17 @@ export default class Player extends cc.Component {
     @property()
     playerSpeed: number = 100;
 
+    @property()
+    sinkSpeed: number = -2.5; // New property for sinking speed
+
+    @property()
+    floatUpSpeed: number = 20; // New property for floating up speed
+
+    @property()
+    floatUpDuration: number = 0.5; // Duration for floating up before sinking
+
+    private floatUpTimer: number = 0; // Timer for floating up duration
+
     onLoad() {
         this._animation = this.node.getComponent(cc.Animation);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
@@ -50,7 +61,16 @@ export default class Player extends cc.Component {
     update(dt) {
         let velocity = this.moveDir.mul(this.playerSpeed);
         if (this.is_inwater) {
-            velocity = cc.v2(this.moveDir.x * this.playerSpeed, this.moveDir.y * this.playerSpeed);
+            // Apply floating up speed if timer is active
+            if (this.floatUpTimer > 0) {
+                this.floatUpTimer -= dt;
+                velocity.y = this.floatUpSpeed;
+            } else if (this.moveDir.y === 0) {
+                // Apply sinking speed if not moving up and timer has elapsed
+                velocity.y = this.sinkSpeed;
+            } else {
+                velocity = cc.v2(this.moveDir.x * this.playerSpeed, this.moveDir.y * this.playerSpeed);
+            }
         }
         this.getComponent(cc.RigidBody).linearVelocity = velocity;
 
@@ -67,6 +87,7 @@ export default class Player extends cc.Component {
                 this._animState = this._animation.play("player_die");
             }
         } else if (this.is_inwater) {
+            // Always play swim animation when in water
             if (this._animState !== this._swimAnimState) {
                 this._animState = this._animation.play("player_swim");
             }
@@ -167,8 +188,7 @@ export default class Player extends cc.Component {
                 }
                 break;
             case cc.macro.KEY.space:
-                if(!this.is_inwater)
-                {
+                if(!this.is_inwater) {
                     this.playerJump();
                 }
                 break;
@@ -184,6 +204,7 @@ export default class Player extends cc.Component {
             case cc.macro.KEY.w:
                 if (this.is_inwater) {
                     this.playerMove(cc.v2(this.moveDir.x, 0));
+                    this.floatUpTimer = this.floatUpDuration; // Start floating up timer
                 }
                 break;
         }

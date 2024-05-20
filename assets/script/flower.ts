@@ -29,8 +29,8 @@ export default class FlowerMovement extends cc.Component {
     }
 
     onBeginContact(contact, selfCollider, otherCollider) {
-        // Check if the other collider is the player
         if (otherCollider.node.name === "player") {
+            console.log("Player collided with flower");
             otherCollider.node.getComponent("player").playerDie();
         }
     }
