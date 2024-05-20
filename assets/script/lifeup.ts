@@ -12,8 +12,9 @@ export default class NewClass extends cc.Component {
     LifeUpSound: cc.AudioClip = null;
 
     start() {
-        // this.getComponent(cc.PhysicsBoxCollider).sensorEnabled = true;
+
     }
+    
     update(dt) {
         this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
             this.moving_dir * this.moving_speed * dt,
@@ -22,14 +23,12 @@ export default class NewClass extends cc.Component {
     }
 
     onBeginContact(contact, selfCollider, otherCollider) {
-        //console.log(otherCollider.node.name);
-
         if (otherCollider.node.name == "player") {
             this.playLifeUpSound();
             this.node.destroy();
             Global.life++;
             console.log(Global.life);
-        } else if (otherCollider.node.name == "pile" ||otherCollider.node.getParent().name == "bound") {
+        } else if (otherCollider.node.name == "pile" ||otherCollider.node.getParent().name == "bound" || otherCollider.node.tag == 2) {
             this.moving_dir = -this.moving_dir;
         }
     }
