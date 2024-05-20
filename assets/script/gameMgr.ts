@@ -53,7 +53,7 @@ export default class GameMgr extends cc.Component {
     onLoad() {
         this.physicManager = cc.director.getPhysicsManager();
         this.physicManager.enabled = true;
-        
+
         console.log("Initializing labels in onLoad");
         if (this.timer_label) {
             this.timer_label.string = this.time.toString();
@@ -203,6 +203,14 @@ export default class GameMgr extends cc.Component {
         Global.life++;
         if (this.life_label) {
             this.life_label.string = Global.life.toString();
+        }
+    }
+
+    get_coin() {
+        cc.audioEngine.playEffect(this.get_coin_sound, false);
+        Global.coin++;
+        if (this.coin_label) {
+            this.coin_label.string = Global.coin.toString();
         }
     }
 

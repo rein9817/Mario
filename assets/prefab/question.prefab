@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "pile",
+    "_name": "question",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -23,6 +23,9 @@
     ],
     "_active": true,
     "_components": [
+      {
+        "__id__": 6
+      },
       {
         "__id__": 7
       },
@@ -46,8 +49,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 32,
-      "height": 64
+      "width": 16,
+      "height": 16
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -58,15 +61,15 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        1393.589,
-        -223.506,
+        627.185,
+        -121.069,
         0,
         0,
         0,
         0,
         1,
-        1,
-        1,
+        3,
+        3,
         1
       ]
     },
@@ -85,7 +88,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "圖塊層 1",
+    "_name": "coin",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -98,13 +101,10 @@
       },
       {
         "__id__": 4
-      },
-      {
-        "__id__": 5
       }
     ],
     "_prefab": {
-      "__id__": 6
+      "__id__": 5
     },
     "_opacity": 255,
     "_color": {
@@ -116,8 +116,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 32,
-      "height": 64
+      "width": 10,
+      "height": 16
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -128,8 +128,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        0,
-        0,
+        -0.001,
+        16.71,
         0,
         0,
         0,
@@ -137,7 +137,7 @@
         1,
         1,
         1,
-        1
+        0.33333
       ]
     },
     "_eulerAngles": {
@@ -154,7 +154,7 @@
     "_id": ""
   },
   {
-    "__type__": "cc.TiledLayer",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -166,57 +166,35 @@
         "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
       }
     ],
-    "_id": ""
-  },
-  {
-    "__type__": "cc.RigidBody",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 2
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_spriteFrame": {
+      "__uuid__": "fe52dd1e-51f2-4b41-a05b-76344a42ecb9"
     },
-    "_enabled": true,
     "_type": 0,
-    "_allowSleep": true,
-    "_gravityScale": 1,
-    "_linearDamping": 0,
-    "_angularDamping": 0,
-    "_linearVelocity": {
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
       "__type__": "cc.Vec2",
       "x": 0,
       "y": 0
     },
-    "_angularVelocity": 0,
-    "_fixedRotation": false,
-    "enabledContactListener": true,
-    "bullet": false,
-    "awakeOnLoad": true,
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_atlas": {
+      "__uuid__": "2677ec71-e0a2-409f-869e-55500092161d"
+    },
     "_id": ""
   },
   {
-    "__type__": "cc.PhysicsBoxCollider",
+    "__type__": "c83e0SgKJhHdprKKoewvN81",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 2
     },
     "_enabled": true,
-    "tag": 2,
-    "_density": 1,
-    "_sensor": false,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "body": null,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 32,
-      "height": 64
-    },
     "_id": ""
   },
   {
@@ -227,19 +205,40 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "26kZdHtXBGLZ0U11gtI5oC",
+    "fileId": "85BU1jMBRLcKfu21iq+2Lf",
     "sync": false
   },
   {
-    "__type__": "cc.TiledMap",
+    "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
-    "_tmxFile": {
-      "__uuid__": "d8a672fb-4870-4f49-bfcc-f57c1b1030ea"
+    "_materials": [
+      {
+        "__uuid__": "eca5d2f2-8ef6-41c2-bbe6-f9c79d09c432"
+      }
+    ],
+    "_srcBlendFactor": 770,
+    "_dstBlendFactor": 771,
+    "_spriteFrame": {
+      "__uuid__": "d51cec6c-0149-4271-b9cf-da19e9bde317"
+    },
+    "_type": 0,
+    "_sizeMode": 1,
+    "_fillType": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_atlas": {
+      "__uuid__": "e2683e64-63e4-4459-9e51-4b0c9fa02701"
     },
     "_id": ""
   },
@@ -289,8 +288,24 @@
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 32,
-      "height": 64
+      "width": 16,
+      "height": 16
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "fabe9H6fB1AR5Dkw+dfmZ7y",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "normalBlockSprite": {
+      "__uuid__": "ecac7211-533a-4117-bb0e-5d85b7695958"
+    },
+    "coinSound": {
+      "__uuid__": "15ad416b-9ebf-4206-ae78-3488489d69d0"
     },
     "_id": ""
   },

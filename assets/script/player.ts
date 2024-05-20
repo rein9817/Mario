@@ -1,5 +1,5 @@
 import Global from "./global";
-import GameMgr from "./gameMgr";
+
 
 const { ccclass, property } = cc._decorator;
 
@@ -80,10 +80,7 @@ export default class Player extends cc.Component {
         if (this.is_onGround) {
             this.is_onGround = false;
             cc.find("gameMgr").getComponent("gameMgr").play_player_jump_sound();
-            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
-                this.getComponent(cc.RigidBody).linearVelocity.x,
-                this.jumpspeed
-            );
+            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.getComponent(cc.RigidBody).linearVelocity.x,this.jumpspeed);
         }
     }
 

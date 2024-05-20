@@ -5,9 +5,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    // start () {
-
-    // }
 
     onBeginContact(contact, selfCollider, otherCollider) {
         if (otherCollider.node.name === 'player') {
