@@ -11218,7 +11218,7 @@
       "ctor": "Float64Array",
       "array": [
         2176.838,
-        -26.326,
+        -33.73,
         0,
         0,
         0,
@@ -16531,10 +16531,11 @@
       "__id__": 4
     },
     "_enabled": true,
-    "jumpspeed": 300,
-    "game_over_sound": {
-      "__uuid__": "e0b5a0e2-3a6b-4639-9548-e536ea7a9934"
+    "game_mgr": {
+      "__id__": 2
     },
+    "is_inwater": true,
+    "jumpspeed": 300,
     "playerSpeed": 100,
     "_id": "1e3vdoJT1HTJ5JznpwPU+W"
   },
@@ -16598,7 +16599,7 @@
     },
     "_enabled": true,
     "_defaultClip": {
-      "__uuid__": "74cb0328-5a1b-48c6-a8f4-7afd1d22089a"
+      "__uuid__": "f857d13c-fa91-4902-8afd-f6dee5b5862d"
     },
     "_clips": [
       {
@@ -16612,6 +16613,9 @@
       },
       {
         "__uuid__": "071451f4-33d1-4806-8381-d33e461c79cc"
+      },
+      {
+        "__uuid__": "f857d13c-fa91-4902-8afd-f6dee5b5862d"
       }
     ],
     "playOnLoad": true,

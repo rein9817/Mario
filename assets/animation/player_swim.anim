@@ -1,0 +1,43 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "player_swim",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.26666666666666666,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "9f7d9b35-97cf-49b2-9e99-ab6ff236e0de"
+            }
+          },
+          {
+            "frame": 0.08333333333333333,
+            "value": {
+              "__uuid__": "053cda76-a524-481e-98ca-5a0f819e8cc2"
+            }
+          },
+          {
+            "frame": 0.16666666666666666,
+            "value": {
+              "__uuid__": "83ba841e-ac83-4107-b21c-f05508c7312b"
+            }
+          },
+          {
+            "frame": 0.25,
+            "value": {
+              "__uuid__": "0cc33315-c609-4021-bdfb-fad9e8e86da4"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
