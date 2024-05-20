@@ -2526,6 +2526,11 @@
       "__id__": 42
     },
     "_enabled": true,
+    "word1": null,
+    "word2": null,
+    "time_label": null,
+    "score_label": null,
+    "time_node": null,
     "_id": "93kvoNKm5N24NQ/k5kBg1p"
   },
   {
@@ -2592,7 +2597,9 @@
     "username_label": {
       "__id__": 12
     },
-    "bgm": null,
+    "bgm": {
+      "__uuid__": "1fc67ffa-9891-424b-8be6-d016217611f6"
+    },
     "_id": "8bbq+V/ydODLyw/GkMU8is"
   }
 ]
