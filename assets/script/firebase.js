@@ -13,11 +13,11 @@
 var config = {
     apiKey: "AIzaSyCxa67of2PJln-WXRfyUugCu5GyPn-S8IY",
     authDomain: "mario-1f6b4.firebaseapp.com",
+    databaseURL: "https://mario-1f6b4-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "mario-1f6b4",
     storageBucket: "mario-1f6b4.appspot.com",
     messagingSenderId: "823221534083",
     appId: "1:823221534083:web:e052b3c04330620e2ccab6"
-    // databaseURL: "",
 };
 
 
