@@ -50,7 +50,7 @@ export default class NewClass extends cc.Component {
             });
     }
     loadStartScene() {
-        cc.director.loadScene("start");
+        cc.director.loadScene("Menu");
     }
 }
 
