@@ -1,8 +1,4 @@
 import Global from "./global";
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
-
 const { ccclass, property } = cc._decorator;
 
 @ccclass
