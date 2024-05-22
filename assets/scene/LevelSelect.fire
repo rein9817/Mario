@@ -2519,19 +2519,14 @@
     "_id": "bev9UgEjpMOJi0hOcO2/2V"
   },
   {
-    "__type__": "fd240vSDKdMWoq3tSa2b+k0",
+    "__type__": "54bae1+q2VB157TFJHcxT9M",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 42
     },
     "_enabled": true,
-    "word1": null,
-    "word2": null,
-    "time_label": null,
-    "score_label": null,
-    "time_node": null,
-    "_id": "93kvoNKm5N24NQ/k5kBg1p"
+    "_id": "4cA6pBlQ5K+rn/tNlarAC/"
   },
   {
     "__type__": "cc.Canvas",
