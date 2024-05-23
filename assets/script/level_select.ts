@@ -80,7 +80,7 @@ export default class LevelSelect extends cc.Component {
             });
             data.reverse();
             Global.leader = data;
-            cc.director.loadScene("leader_board");
+            cc.director.loadScene("LeaderBoard");
         });
     }
 }

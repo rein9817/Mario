@@ -1,12 +1,11 @@
-import Global from "./global";
 import Player from "./player";
+import Global from "./global";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class GameMgr extends cc.Component { 
-
-    @property(cc.Node)
-    player: cc.Node = null;
+export default class GameMgr extends cc.Component {
+    @property(Player)
+    player: Player = null;
 
     @property(cc.Label)
     life_label: cc.Label = null;
@@ -45,132 +44,99 @@ export default class GameMgr extends cc.Component {
     level_complete_sound: cc.AudioClip = null;
 
     @property(cc.AudioClip)
-    player_swim_sound: cc.AudioClip = null; 
+    player_swim_sound: cc.AudioClip = null;
 
+    private leftDown: boolean = false;
+    private rightDown: boolean = false;
     private physicManager: cc.PhysicsManager = null;
     private time: number = 300;
 
     onLoad() {
         this.physicManager = cc.director.getPhysicsManager();
         this.physicManager.enabled = true;
+        this.physicManager.gravity = cc.v2(0, -200);
 
-        console.log("Initializing labels in onLoad");
-        if (this.timer_label) {
-            this.timer_label.string = this.time.toString();
-        } else {
-            console.error("timer_label is null");
-        }
-
-        if (this.life_label) {
-            this.life_label.string = Global.life.toString();
-        } else {
-            console.error("life_label is null");
-        }
-
-        if (this.coin_label) {
-            this.coin_label.string = Global.coin.toString();
-        } else {
-            console.error("coin_label is null");
-        }
-
-        if (this.score_label) {
-            this.score_label.string = Global.score.toString();
-        } else {
-            console.error("score_label is null");
-        }
+        this.timer_label.string = this.time.toString();
+        this.life_label.string = Global.life.toString();
+        this.coin_label.string = Global.coin.toString();
+        this.score_label.string = Global.score.toString();
     }
 
     start() {
         this.playBGM();
-        if (this.life_label) {
-            this.life_label.string = Global.life.toString();
-        } else {
-            console.error("life_label is null in start");
-        }
+        this.life_label.string = Global.life.toString();
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+
         this.schedule(this.update_timer, 1);
     }
 
     update(dt) {
-        if (!Global.score) {
+        if (Global.score == null) {
             Global.score = 0;
-            if (this.score_label) {
-                this.score_label.string = Global.score.toString();
-            }
+            this.score_label.string = Global.score.toString();
         }
 
-        if (!Global.coin) {
+        if (Global.coin == null) {
             Global.coin = 0;
-            if (this.coin_label) {
-                this.coin_label.string = Global.coin.toString();
-            }
+            this.coin_label.string = Global.coin.toString();
         }
     }
 
     update_timer() {
         if (this.time <= 0) {
-            if (this.timer_label) {
-                this.timer_label.string = "0";
-            }
-            this.player.getComponent(Player).playerDie();
+            this.timer_label.string = "0";
+            this.player.playerDie();
         } else {
             this.time--;
-            if (this.timer_label) {
-                this.timer_label.string = this.time.toString();
-            }
+            this.timer_label.string = this.time.toString();
         }
     }
 
     onKeyDown(event: cc.Event.EventKeyboard) {
-        let playerComp = this.player.getComponent(Player);
         switch (event.keyCode) {
-            case cc.macro.KEY.a: // Left
-                playerComp.playerMove(-1);
+            case cc.macro.KEY.left:
+                this.player.playerMove(-1);
                 break;
-            case cc.macro.KEY.d: // Right
-                playerComp.playerMove(1);
+            case cc.macro.KEY.right:
+                this.player.playerMove(1);
                 break;
-            case cc.macro.KEY.space: // Jump
-                playerComp.playerJump();
+            case cc.macro.KEY.up:
+                this.player.playerJump();
                 break;
         }
     }
 
     onKeyUp(event: cc.Event.EventKeyboard) {
-        if (event.keyCode === cc.macro.KEY.a || event.keyCode === cc.macro.KEY.d) {
-            this.player.getComponent(Player).playerMove(0);
+        switch (event.keyCode) {
+            case cc.macro.KEY.left:
+            case cc.macro.KEY.right:
+                this.player.playerMove(0);
+                break;
         }
     }
 
     game_complete() {
         this.unschedule(this.update_timer);
         cc.audioEngine.playMusic(this.level_complete_sound, false);
-        cc.systemEvent.off(
-            cc.SystemEvent.EventType.KEY_DOWN,
-            this.onKeyDown,
-            this
-        );
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+
         Global.complete1 = true;
-        let seq = cc.sequence(
+        const seq = cc.sequence(
             cc.delayTime(1),
             cc.callFunc(() => {
                 this.game_complete_word.getComponent("game_complete").show_word1();
             }),
             cc.delayTime(1),
             cc.callFunc(() => {
-                this.game_complete_word
-                    .getComponent("game_complete")
-                    .show_word2();
+                this.game_complete_word.getComponent("game_complete").show_word2();
             }),
             cc.delayTime(1),
             cc.callFunc(() => {
-                this.game_complete_word
-                    .getComponent("game_complete")
-                    .show_score(this.time);
+                this.game_complete_word.getComponent("game_complete").show_score(this.time);
                 Global.score += this.time * 50;
-                if (this.score_label) {
-                    this.score_label.string = Global.score.toString();
-                }
+                this.score_label.string = Global.score.toString();
             }),
             cc.delayTime(1),
             cc.callFunc(() => {
@@ -191,27 +157,21 @@ export default class GameMgr extends cc.Component {
         this.node.runAction(seq);
     }
 
+    get_coin() {
+        Global.coin++;
+        this.coin_label.string = Global.coin.toString();
+        cc.audioEngine.playEffect(this.get_coin_sound, false);
+    }
+
     get_score(score: number) {
         Global.score += score;
-        if (this.score_label) {
-            this.score_label.string = Global.score.toString();
-        }
+        this.score_label.string = Global.score.toString();
     }
 
     get_lifeup() {
-        cc.audioEngine.playEffect(this.player_lifeup_sound, false);
         Global.life++;
-        if (this.life_label) {
-            this.life_label.string = Global.life.toString();
-        }
-    }
-
-    get_coin() {
-        cc.audioEngine.playEffect(this.get_coin_sound, false);
-        Global.coin++;
-        if (this.coin_label) {
-            this.coin_label.string = Global.coin.toString();
-        }
+        this.life_label.string = Global.life.toString();
+        cc.audioEngine.playEffect(this.player_lifeup_sound, false);
     }
 
     playBGM() {

@@ -1,13 +1,13 @@
-import Global from "./global";
 const { ccclass, property } = cc._decorator;
+import Global from "./global";
 
 @ccclass
 export default class Player extends cc.Component {
     @property(cc.Node)
     game_mgr: cc.Node = null;
 
-    @property()
-    is_inwater: boolean = false;
+    @property(cc.Boolean)
+    is_inwater: cc.Boolean = false;
 
     @property()
     jumpspeed: number = 300;
@@ -19,29 +19,25 @@ export default class Player extends cc.Component {
     private _jumpAnimState: cc.AnimationState = null;
     private _dieAnimState: cc.AnimationState = null;
     private _swimAnimState: cc.AnimationState = null;
+    private _swimupAnimState: cc.AnimationState = null;
     private idleFrame: cc.SpriteFrame = null;
 
+    private is_player_move: boolean = false;
+    private is_jump: boolean = false;
     private is_onGround: boolean = false;
     private is_die: boolean = false;
 
-    private moveDir = cc.v2(0, 0);
+    private roburn_x: number = -465;
+
+    private moveDir = 0;
 
     @property()
     playerSpeed: number = 100;
 
-    @property()
-    sinkSpeed: number = -2.5; // New property for sinking speed
-
-    @property()
-    floatUpSpeed: number = 20; // New property for floating up speed
-
-    @property()
-    floatUpDuration: number = 0.5; // Duration for floating up before sinking
-
-    private floatUpTimer: number = 0; // Timer for floating up duration
-
     onLoad() {
         this._animation = this.node.getComponent(cc.Animation);
+
+        // Add event listeners for keyboard input
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
     }
@@ -55,69 +51,98 @@ export default class Player extends cc.Component {
         this._dieAnimState = this._animation.getAnimationState("player_die");
         this._swimAnimState = this._animation.getAnimationState("player_swim");
 
-        this.updateAnimationState();
+        if (this.is_inwater) {
+            this._animState = this._animation.play("player_swim");
+        } else {
+            this._animState = this._animation.play("player_idle");
+        }
     }
 
     update(dt) {
-        let velocity = this.moveDir.mul(this.playerSpeed);
-        if (this.is_inwater) {
-            // Apply floating up speed if timer is active
-            if (this.floatUpTimer > 0) {
-                this.floatUpTimer -= dt;
-                velocity.y = this.floatUpSpeed;
-            } else if (this.moveDir.y === 0) {
-                // Apply sinking speed if not moving up and timer has elapsed
-                velocity.y = this.sinkSpeed;
-            } else {
-                velocity = cc.v2(this.moveDir.x * this.playerSpeed, this.moveDir.y * this.playerSpeed);
-            }
-        }
-        this.getComponent(cc.RigidBody).linearVelocity = velocity;
+        this.node.x = this.node.x <= this.roburn_x ? this.roburn_x : this.node.x;
 
-        if (this.moveDir.x !== 0) {
-            this.node.setScale(new cc.Vec2(Math.sign(this.moveDir.x), 1));
+        this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
+            this.moveDir * this.playerSpeed,
+            this.getComponent(cc.RigidBody).linearVelocity.y
+        );
+
+        if (this.moveDir != 0) {
+            this.node.setScale(new cc.Vec2(this.moveDir, 1));
         }
 
-        this.updateAnimationState();
+        if (!this.is_inwater) {
+            this.handleLandAnimations();
+        } else {
+            this.handleWaterAnimations();
+        }
     }
 
-    updateAnimationState() {
-        if (this.is_die) {
-            if (this._animState !== this._dieAnimState) {
-                this._animState = this._animation.play("player_die");
-            }
-        } else if (this.is_inwater) {
-            // Always play swim animation when in water
-            if (this._animState !== this._swimAnimState) {
-                this._animState = this._animation.play("player_swim");
-            }
-        } else {
-            const velocity = this.getComponent(cc.RigidBody).linearVelocity;
-            if (!velocity.fuzzyEquals(cc.Vec2.ZERO, 0.01) && this.is_onGround) {
-                if (this._animState !== this._moveAnimState) {
+    handleLandAnimations() {
+        if (!this.is_die) {
+            if (
+                !this.node.getComponent(cc.RigidBody).linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01) &&
+                this.is_onGround
+            ) {
+                if (this._animState != this._moveAnimState) {
                     this._animState = this._animation.play("player_move");
                 }
-            } else if (!velocity.fuzzyEquals(cc.Vec2.ZERO, 0.01)) {
-                if (this._animState !== this._jumpAnimState) {
+            } else if (
+                !this.node.getComponent(cc.RigidBody).linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01)
+            ) {
+                if (this._animState != this._jumpAnimState) {
                     this._animState = this._animation.play("player_jump");
                 }
             } else {
-                if (this._animState !== this._idleAnimState) {
+                if (this._animState != this._idleAnimState) {
                     this._animState = this._animation.play("player_idle");
                 }
+            }
+        } else {
+            if (this._animState != this._dieAnimState) {
+                this._animState = this._animation.play("player_die");
             }
         }
     }
 
-    playerMove(moveDir: cc.Vec2) {
+    handleWaterAnimations() {
+        if (!this.is_die) {
+            if (this.is_onGround && this._animState != this._moveAnimState) {
+                this._animState = this._animation.play("player_move");
+            } else if (!this.is_onGround &&this._animState != this._swimAnimState ) {
+                this._animState = this._animation.play("player_swim");
+            }
+        } else {
+            if (this._animState != this._dieAnimState) {
+                this._animState = this._animation.play("player_die");
+            }
+        }
+    }
+
+    playerMove(moveDir: number) {
         this.moveDir = moveDir;
     }
 
     playerJump() {
-        if (!this.is_inwater && this.is_onGround) {
+        if (this.is_inwater) {
             this.is_onGround = false;
-            cc.find("GameMgr").getComponent("gameMgr").play_player_jump_sound();
-            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(this.getComponent(cc.RigidBody).linearVelocity.x, this.jumpspeed);
+            this._animState = this._animation.play("player_swim_up");
+            cc.find("gameMgr").getComponent("gameMgr").play_player_swim_sound();
+            this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
+                this.getComponent(cc.RigidBody).linearVelocity.x,
+                this.jumpspeed
+            );
+            this.scheduleOnce(function () {
+                this._animState = this._animation.play("player_swim");
+            }, 0.5);
+        } else {
+            if (this.is_onGround) {
+                this.is_onGround = false;
+                cc.find("gameMgr").getComponent("gameMgr").play_player_jump_sound();
+                this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
+                    this.getComponent(cc.RigidBody).linearVelocity.x,
+                    this.jumpspeed
+                );
+            }
         }
     }
 
@@ -134,7 +159,7 @@ export default class Player extends cc.Component {
                 }),
                 cc.delayTime(0.5),
                 cc.callFunc(() => {
-                    cc.director.loadScene("game_over");
+                    cc.director.loadScene("GameOver");
                 })
             );
             this.node.runAction(seq);
@@ -147,7 +172,7 @@ export default class Player extends cc.Component {
                 }),
                 cc.delayTime(0.5),
                 cc.callFunc(() => {
-                    cc.director.loadScene("game_start");
+                    cc.director.loadScene("GameStart");
                 })
             );
             this.node.runAction(seq);
@@ -158,11 +183,15 @@ export default class Player extends cc.Component {
         if (this.is_die) {
             contact.disabled = true;
         } else {
-            if (otherCollider.node.name === "lower_bound") {
+            if (otherCollider.node.name == "lower_bound") {
                 this.playerDie();
-            } else if (otherCollider.tag === 2 && contact.getWorldManifold().normal.y < 0) {
+            } else if (
+                otherCollider.tag == 2 &&
+                contact.getWorldManifold().normal.y < 0
+            ) {
                 this.is_onGround = true;
-            } else if (otherCollider.node.name === "flag") {
+                this._animState = this._animation.play("player_idle");
+            } else if (otherCollider.node.name == "flag") {
                 this.game_mgr.getComponent("gameMgr").game_complete();
             }
         }
@@ -174,38 +203,25 @@ export default class Player extends cc.Component {
         }
     }
 
-    onKeyDown(event: cc.Event.EventKeyboard) {
+    onKeyDown(event) {
         switch (event.keyCode) {
-            case cc.macro.KEY.a:
-                this.playerMove(cc.v2(-1, this.moveDir.y));
+            case cc.macro.KEY.left:
+                this.playerMove(-1);
                 break;
-            case cc.macro.KEY.d:
-                this.playerMove(cc.v2(1, this.moveDir.y));
+            case cc.macro.KEY.right:
+                this.playerMove(1);
                 break;
-            case cc.macro.KEY.w:
-                if (this.is_inwater) {
-                    this.playerMove(cc.v2(this.moveDir.x, 1));
-                }
-                break;
-            case cc.macro.KEY.space:
-                if(!this.is_inwater) {
-                    this.playerJump();
-                }
+            case cc.macro.KEY.up:
+                this.playerJump();
                 break;
         }
     }
 
-    onKeyUp(event: cc.Event.EventKeyboard) {
+    onKeyUp(event) {
         switch (event.keyCode) {
-            case cc.macro.KEY.a:
-            case cc.macro.KEY.d:
-                this.playerMove(cc.v2(0, this.moveDir.y));
-                break;
-            case cc.macro.KEY.w:
-                if (this.is_inwater) {
-                    this.playerMove(cc.v2(this.moveDir.x, 0));
-                    this.floatUpTimer = this.floatUpDuration; // Start floating up timer
-                }
+            case cc.macro.KEY.left:
+            case cc.macro.KEY.right:
+                this.playerMove(0);
                 break;
         }
     }
