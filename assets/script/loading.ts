@@ -1,39 +1,30 @@
 import Global from "./global";
 const { ccclass, property } = cc._decorator;
 
-// Initialize Global variables
-Global.coin = 0;
-Global.life = 5;
-Global.score = 0;
-Global.max_score = 0;
-Global.complete1 = false;
-Global.username = null;
-
 @ccclass
 export default class NewClass extends cc.Component {
     start() {
-        // Retrieve user data from local storage
-        let userData = JSON.parse(cc.sys.localStorage.getItem("userData"));
-
-        if (!userData) {
-            userData = {
-                coin: 0,
-                life: 5,
-                score: 0,
-                max_score: 0,
-                complete1: false,
-                username: Global.username,
-            };
-            cc.sys.localStorage.setItem("userData", JSON.stringify(userData));
+        const user = firebase.auth().currentUser;
+        if (user) {
+            const ref = firebase.database().ref("users/" + user.uid);
+            ref.on("value", (snapshot) => {
+                const val = snapshot.val();
+                if (val) {
+                    Global.coin = val.coin || 0;
+                    Global.username = val.username ? val.username.toUpperCase() : "UNKNOWN";
+                    Global.life = val.life || 3;
+                    Global.score = val.score || 0;
+                    Global.max_score = val.max_score || 0;
+                    Global.complete1 = val.complete1 || false;
+                    cc.director.loadScene("LevelSelect");
+                } else {
+                    console.error("No data available for the user.");
+                }
+            }, (error) => {
+                console.error("Error fetching user data: ", error);
+            });
+        } else {
+            console.error("No user is currently signed in.");
         }
-
-        Global.coin = userData.coin;
-        Global.life = userData.life;
-        Global.score = userData.score;
-        Global.max_score = userData.max_score;
-        Global.complete1 = userData.complete1;
-        Global.username = userData.username;
-
-        cc.director.loadScene("LevelSelect");
     }
 }

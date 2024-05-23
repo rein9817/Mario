@@ -23,6 +23,7 @@ export default class NewClass extends cc.Component {
         cancel_btn.handler = "loadStartScene";
         cc.find("Canvas/Main Camera/sprite/cancel_btn").getComponent(cc.Button).clickEvents.push(cancel_btn);
     }
+
     sign_up() {
         firebase
             .auth()
@@ -49,6 +50,7 @@ export default class NewClass extends cc.Component {
                 alert(error.message);
             });
     }
+
     loadStartScene() {
         cc.director.loadScene("Menu");
     }

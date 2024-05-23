@@ -20,10 +20,7 @@ export default class LevelSelect extends cc.Component {
 
     start() {
         cc.audioEngine.playMusic(this.bgm, true);
-        this.life_label.string = Global.life.toString();
-        this.coin_label.string = Global.coin.toString();
-        this.score_label.string = Global.score.toString();
-        this.username_label.string = Global.username;
+        this.updateLabels();
 
         let stage1_btn = new cc.Component.EventHandler();
         stage1_btn.target = this.node;
@@ -49,6 +46,16 @@ export default class LevelSelect extends cc.Component {
             .getComponent(cc.Button)
             .clickEvents.push(leader_board_btn);
     }
+
+
+    updateLabels() {
+        this.life_label.string = (Global.life !== null && Global.life !== undefined) ? Global.life.toString() : "0";
+        this.coin_label.string = (Global.coin !== null && Global.coin !== undefined) ? Global.coin.toString() : "0";
+        this.score_label.string = (Global.score !== null && Global.score !== undefined) ? Global.score.toString() : "0";
+        this.username_label.string = (Global.username !== null && Global.username !== undefined) ? Global.username : "";
+        console.log(Global.username);
+    }
+
 
     LoadStage1() {
         console.log("LoadStage1");
