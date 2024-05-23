@@ -49,12 +49,12 @@ export default class GameMgr extends cc.Component {
     private leftDown: boolean = false;
     private rightDown: boolean = false;
     private physicManager: cc.PhysicsManager = null;
-    private time: number = 300;
+    private time: number = 200;
 
     onLoad() {
         this.physicManager = cc.director.getPhysicsManager();
         this.physicManager.enabled = true;
-        this.physicManager.gravity = cc.v2(0, -200);
+        this.physicManager.gravity = cc.v2(0, -300);
 
         this.timer_label.string = this.time.toString();
         this.life_label.string = Global.life.toString();
@@ -87,6 +87,7 @@ export default class GameMgr extends cc.Component {
         if (this.time <= 0) {
             this.timer_label.string = "0";
             this.player.playerDie();
+            
         } else {
             this.time--;
             this.timer_label.string = this.time.toString();

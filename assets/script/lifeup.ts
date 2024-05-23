@@ -7,7 +7,7 @@ export default class NewClass extends cc.Component {
     private moving_speed: number = 10000;
 
     @property(cc.Float)
-    moving_dir: number = 1; // Use cc.Float instead of cc.number
+    moving_dir: number = 1; 
 
     @property(cc.AudioClip)
     LifeUpSound: cc.AudioClip = null;
@@ -32,7 +32,7 @@ export default class NewClass extends cc.Component {
         if (otherCollider.node.name == "player") {
             this.playLifeUpSound();
             this.node.destroy();
-            cc.find("gameMgr").getComponent("gameMgr").get_coin();
+            cc.find("gameMgr").getComponent("gameMgr").get_lifeup();
         } else if (
             otherCollider.node.name == "pile" ||
             otherCollider.node.getParent().name == "bound" ||
