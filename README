@@ -1,0 +1,113 @@
+# Software Studio 2024 Spring Assignment 2
+
+## Scoring
+
+### Basic Components
+
+| **Component**          | **Score** | **Check** |
+|:----------------------:|:---------:|:---------:|
+| Complete Game Process  |     5%    |     Y     |
+| Basic Rules            |    55%    |     Y     |
+| Animations             |    10%    |     Y     |
+| Sound Effects          |    10%    |     Y     |
+| UI                     |    10%    |     Y     |
+
+
+### Advanced Components
+
+| Component              | Score | Check |
+|------------------------|-------|-------|
+| Leaderboard            | 5%    | Y     |
+| Firebase Deploy        | 5%    | Y     |
+
+---
+
+## Basic Components Description
+
+### World Map
+
+**World 1:**
+- Typical Mario world with question blocks, enemies, and obstacles.
+- Goal: Reach the end and touch the flagpole.
+
+**World 2:**
+- Underwater-themed Mario world.
+- Player swims instead of jumps and must avoid "Flower" enemies.
+
+### Player Controls
+
+**World 1:**
+- Press "Up" to jump.
+
+**World 2:**
+- Press "Up" to swim upwards.
+
+**All Worlds:**
+- Press "Left" or "Right" to move.
+- Falling into a hole or touching enemies decreases life count.
+- If life count reaches 0:
+  - Scene changes to level select screen with score reset, or
+  - Player respawns at the initial position.
+
+### Enemies
+
+**Goomba:**
+- Killed when hit on the head.
+![2024-05-25 06 16 46](https://hackmd.io/_uploads/BJLJzcAXA.png)
+
+**Fly Goomba:**
+- Changes to Goomba when hit on the head.
+![2024-05-25 06 16 14](https://hackmd.io/_uploads/Bylgf5070.png)
+
+**Flower:**
+- Moves up and down.
+- Player must avoid touching them.
+
+![2024-05-25 06 18 25](https://hackmd.io/_uploads/rJ6mX9C7C.png)
+
+### Question Blocks
+
+**Coin:**
+- Collect 1 coin by jumping into the block from below.
+- ![2024-05-25 06 13 08](https://hackmd.io/_uploads/S1Sm-cCmA.png)
+
+
+
+
+**HP+1:**
+- Increases life count by 1 by jumping into the block from below.
+![2024-05-25 06 14 39](https://hackmd.io/_uploads/rJ8wWcA70.png)
+
+
+### Animations
+
+- Player jump
+- Player move
+- Player swim
+- Goomba move
+- Goomba die
+- Goomba fly
+- Flower move
+
+### Sound Effects
+
+- Background music for level select, World 1, and World 2
+- Collect HP+1
+- Collect coin
+- Player jump
+- Player swim
+- Player die
+
+### UI
+
+- Displays life count, coins, score, timer, and world name.
+- Player dies if timer reaches 0.
+
+## Advanced Components Description
+
+### Leaderboard
+
+- Click on the star icon in the select scene to view the leaderboard with the highest scoring players.
+
+## Firebase Page Link
+https://lab11-83fd5.web.app/
