@@ -174,7 +174,9 @@
     "level_complete_sound": {
       "__uuid__": "fd728bfa-1fc9-4689-9737-f532d348dedc"
     },
-    "player_swim_sound": null,
+    "player_swim_sound": {
+      "__uuid__": "da331058-b685-4273-8feb-ff5df4201d08"
+    },
     "_id": "9f6gv+wLFHqbmWPbGLrEeM"
   },
   {
