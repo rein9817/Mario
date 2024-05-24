@@ -5,7 +5,7 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Block extends cc.Component {
     @property(cc.SpriteFrame)
-    normalBlockSprite: cc.SpriteFrame = null;  // Sprite for the normal block
+    normalBlockSprite: cc.SpriteFrame = null;
 
     @property(cc.AudioClip)
     coinSound: cc.AudioClip = null;
@@ -44,8 +44,6 @@ export default class Block extends cc.Component {
                 } else {
                     console.error("RigidBody not found or not enabled on node");
                 }
-            } else {
-                console.error("Coin node not found");
             }
         }
     }
@@ -58,11 +56,6 @@ export default class Block extends cc.Component {
     }
 
     playCoinSound() {
-        if (this.coinSound) {
-            cc.audioEngine.playEffect(this.coinSound, false);
-            console.log("Coin sound played");
-        } else {
-            console.error("Coin sound not found");
-        }
+        cc.audioEngine.playEffect(this.coinSound, false);
     }
 }

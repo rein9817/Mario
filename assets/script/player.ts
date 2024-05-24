@@ -1,5 +1,5 @@
-const { ccclass, property } = cc._decorator;
 import Global from "./global";
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Player extends cc.Component {
@@ -7,7 +7,7 @@ export default class Player extends cc.Component {
     game_mgr: cc.Node = null;
 
     @property(cc.Boolean)
-    is_inwater: cc.Boolean = false;
+    is_inwater: boolean = false;
 
     @property()
     jumpspeed: number = 300;
@@ -27,7 +27,7 @@ export default class Player extends cc.Component {
     private is_onGround: boolean = false;
     private is_die: boolean = false;
 
-    private roburn_x: number = -465;
+    private reborn_x: number = -465;
 
     private moveDir = 0;
 
@@ -37,7 +37,6 @@ export default class Player extends cc.Component {
     onLoad() {
         this._animation = this.node.getComponent(cc.Animation);
 
-        // Add event listeners for keyboard input
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
     }
@@ -50,6 +49,7 @@ export default class Player extends cc.Component {
         this._jumpAnimState = this._animation.getAnimationState("player_jump");
         this._dieAnimState = this._animation.getAnimationState("player_die");
         this._swimAnimState = this._animation.getAnimationState("player_swim");
+        this._swimupAnimState = this._animation.getAnimationState("player_swim_up");
 
         if (this.is_inwater) {
             this._animState = this._animation.play("player_swim");
@@ -59,7 +59,7 @@ export default class Player extends cc.Component {
     }
 
     update(dt) {
-        this.node.x = this.node.x <= this.roburn_x ? this.roburn_x : this.node.x;
+        this.node.x = this.node.x <= this.reborn_x ? this.reborn_x : this.node.x;
 
         this.getComponent(cc.RigidBody).linearVelocity = cc.v2(
             this.moveDir * this.playerSpeed,
@@ -69,7 +69,6 @@ export default class Player extends cc.Component {
         if (this.moveDir != 0) {
             this.node.setScale(new cc.Vec2(this.moveDir, 1));
         }
-
         if (!this.is_inwater) {
             this.handleLandAnimations();
         } else {
@@ -79,16 +78,11 @@ export default class Player extends cc.Component {
 
     handleLandAnimations() {
         if (!this.is_die) {
-            if (
-                !this.node.getComponent(cc.RigidBody).linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01) &&
-                this.is_onGround
-            ) {
+            if (!this.node.getComponent(cc.RigidBody).linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01) && this.is_onGround) {
                 if (this._animState != this._moveAnimState) {
                     this._animState = this._animation.play("player_move");
                 }
-            } else if (
-                !this.node.getComponent(cc.RigidBody).linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01)
-            ) {
+            } else if (!this.node.getComponent(cc.RigidBody).linearVelocity.fuzzyEquals(cc.Vec2.ZERO, 0.01)) {
                 if (this._animState != this._jumpAnimState) {
                     this._animState = this._animation.play("player_jump");
                 }
@@ -106,9 +100,9 @@ export default class Player extends cc.Component {
 
     handleWaterAnimations() {
         if (!this.is_die) {
-            if (this.is_onGround && this._animState != this._moveAnimState) {
-                this._animState = this._animation.play("player_move");
-            } else if (!this.is_onGround &&this._animState != this._swimAnimState ) {
+            if (this.is_onGround && this._animState != this._swimAnimState && this._animState != this._swimupAnimState) {
+                this._animState = this._animation.play("player_swim");
+            } else if (!this.is_onGround && this._animState != this._swimAnimState && this._animState != this._swimupAnimState) {
                 this._animState = this._animation.play("player_swim");
             }
         } else {
@@ -117,6 +111,7 @@ export default class Player extends cc.Component {
             }
         }
     }
+    
 
     playerMove(moveDir: number) {
         this.moveDir = moveDir;
@@ -185,17 +180,19 @@ export default class Player extends cc.Component {
         } else {
             if (otherCollider.node.name == "lower_bound") {
                 this.playerDie();
-            } else if (
-                otherCollider.tag == 2 &&
-                contact.getWorldManifold().normal.y < 0
-            ) {
+            } else if (otherCollider.tag == 2 && contact.getWorldManifold().normal.y < 0) {
                 this.is_onGround = true;
-                this._animState = this._animation.play("player_idle");
+                if (this.is_inwater) {
+                    this._animState = this._animation.play("player_swim");
+                } else {
+                    this._animState = this._animation.play("player_idle");
+                }
             } else if (otherCollider.node.name == "flag") {
                 this.game_mgr.getComponent("gameMgr").game_complete();
             }
         }
     }
+    
 
     onPreSolve(contact, selfCollider, otherCollider) {
         if (this.is_die) {
